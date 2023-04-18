@@ -89,6 +89,29 @@ else passes the test. if nested inside an attr that has q-xxx, it will return
 the first q-else found if the q-xxx fails, or will be removed if the q-xxx
 passes.
 
+It is important to note that the q-else must be nested inside the q-xxx, not
+a sibling
+
+So, this:
+
+```html
+<p q-if="foo">
+  <span>Foo</span>
+  <span q-else>Not Foo</span>
+</p>
+```
+
+Not this:
+  
+```html
+<p q-if="foo">
+  <span>Foo</span>
+</p>
+<p q-else>
+  <span>Not Foo</span>
+</p>
+```
+
 The following custom tag is added:
 
 ## m-f tag 
