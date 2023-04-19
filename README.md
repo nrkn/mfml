@@ -241,7 +241,7 @@ secure version later for people who want to host their games for others to play.
 
 create / load / save games
 
-each game has a folder under ./data/www, eg ./data/www/mygame
+each game has a folder under ./data/www/games, eg ./data/www/games/mygame
 
 there is a client side app that can be used to create and manage games
 and a server api to save and load them into the client app
