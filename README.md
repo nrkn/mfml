@@ -208,3 +208,84 @@ HTML:
   </p>
 </section>
 ```
+
+## stage 3
+
+Stage 2, but with tools to help manage complexity.
+
+- redirects
+- includes
+- partials
+
+### Organisational attributes and tags
+
+Have to figure out what the pain points are before we design this
+
+placeholder example:
+
+```html
+<m-f group>
+  Maybe just group is generic enough?
+</m-f>
+```
+
+<!-- todo: add further stages -->
+
+# server
+
+The "server" in intended to run in local mode, eg in electron or compiled to a 
+native app, so we don't need to have any security - however we could release a 
+secure version later for people who want to host their games for others to play.
+
+## creator mode
+
+create / load / save games
+
+each game has a folder under ./data/www, eg ./data/www/mygame
+
+there is a client side app that can be used to create and manage games
+and a server api to save and load them into the client app
+
+games for the 2 stages we have defined so far will be stored in the game 
+folder as index.html, containing a template element with all the sections,
+and a script element with the runtime.
+
+The main screen of the creator app will be a list of games, with a button to
+create a new game, and a button to edit each game.
+
+When you click edit, it will load the game into the client app, and you can
+edit it there.
+
+When you click save, it will save the game to the server, and reload the list
+
+### The game editor
+
+The main screen of the game editor will be a list of sections, with a button to
+create a new section, and a button to edit each section.
+
+When you click edit, it will load the section into the client app, and you can
+edit it there.
+
+When you click save, it will save the section to the server, and reload the list
+
+### The section editor
+
+Content editable is too complex and tricky, so we will just use monaco editor,
+along with some custom side bars showing information about the links in the 
+section, eg if they are new uncreated sections, or existing sections. Because 
+typos are easy, it would be good if we can find a plugin for monaco that offers
+autocomplete on the a href attributes that point to section ids already in the
+game, that way if the user types something similar to an existing section they
+will see the suggestion and realise they have made a typo, or that the name they
+were going to use is already in use.
+
+The app is split in half, and the left half is the editor, and the right half
+is the preview. If you have saved your changes, you can click a link in the 
+preview to navigate to another section, or create a new one if the link doesn't
+point anywhere yet. If you haven't saved your changes, the links are disabled.
+We should signal this clearly to the user somehow, or consider a variation on
+the approach.
+
+## player mode
+
+play games - should just be as simple as pointing a browser at the game path
