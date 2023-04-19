@@ -4,17 +4,17 @@ export const interpret = (...handlers: NodeHandler[]) =>
   (node: Node) =>
     inter(handlers)(node.cloneNode(true))
 
-export const inter = (handlers: NodeHandler[]) =>
+const inter = (handlers: NodeHandler[]) =>
   (node: Node) => {
     for (const handler of handlers) {
       let newNode = handler(node)
 
       if (newNode !== node) {
         newNode = inter(handlers)(newNode)
-        if( node.parentNode === null ) throw Error( 'node.parentNode is null')
+        if (node.parentNode === null) throw Error('node.parentNode is null')
 
-        node.parentNode.replaceChild(newNode, node)        
-        node = newNode        
+        node.parentNode.replaceChild(newNode, node)
+        node = newNode
 
         break
       }
@@ -27,4 +27,4 @@ export const inter = (handlers: NodeHandler[]) =>
     }
 
     return node
-  }  
+  }

@@ -149,6 +149,13 @@ const isValidQuery = (keys: Set<string>) =>
 const findValidQuery = (keys: Set<string>) =>
   findChild(isValidQuery(keys))
 
+const testKey = (keys: Set<string>) =>
+ ( key: string ) => {
+    const isNot = key.startsWith('!')
+
+    return isNot ? !keys.has(key.slice(1)) : keys.has(key)
+ }
+
 const testKeys = (keys: Set<string>) =>
   (ifKeys: string[], orKeys: string[], notKeys: string[]) => {
     const hasIf = ifKeys.length > 0
@@ -159,17 +166,13 @@ const testKeys = (keys: Set<string>) =>
       return true
     }
 
-    if (!ifKeys.every(key => keys.has(key))) {
-      return false
-    }
+    const tk = testKey( keys )
 
-    if (hasOr && !orKeys.some(key => keys.has(key))) {
-      return false
-    }
+    if( !ifKeys.every( tk ) ) return false
 
-    if (notKeys.some(key => keys.has(key))) {
-      return false
-    }
+    if( hasOr && !orKeys.some( tk ) ) return false
+
+    if( notKeys.some( tk ) ) return false
 
     return true
   }
