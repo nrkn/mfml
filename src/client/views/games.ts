@@ -1,23 +1,26 @@
 import { button, div, h1, p } from '@nrkn/h'
 import { deleteGame, getGameNames } from '../store/game'
-import { ulFrom } from './ul-from'
-import { redirect } from '../redirect'
+import { ulFrom } from './util/ul-from'
+import { buttonTo, buttonConfirmFn } from './util/buttons'
 
-export const gamesView = async (id = 'games') => {
+export const gamesView = async ( id = 'games') => {
   const gameNames = await getGameNames()
 
   const gamesHeader = h1('Games')
-
-  const createButton = button('Create a game')
-
-  createButton.addEventListener('click', () => {
-    redirect('#createGame')
-  })
+  const createButton = buttonTo( '#createGame', 'Create a game')
 
   const gameToNode = (name: string) => {
-    const playButton = button('Play')
-    const editButton = button('Edit')
-    const deleteButton = button('Delete')
+    const playButton = buttonTo('#play/' + name, 'Play')
+    const editButton = buttonTo('#editGame/' + name, 'Edit')
+
+    const deleteButton = buttonConfirmFn(
+      async () => {
+        await deleteGame(name)
+        gameEl.remove()
+      },
+      `Are you sure you want to delete "${name}"?`,
+      'Delete'
+    )
 
     const gameEl = div(
       p(name),
@@ -25,21 +28,6 @@ export const gamesView = async (id = 'games') => {
         playButton, editButton, deleteButton
       )
     )
-
-    playButton.addEventListener('click', () => {
-      redirect('#play/' + name)
-    })
-
-    editButton.addEventListener('click', () => {
-      redirect('#editGame/' + name)
-    })
-
-    deleteButton.addEventListener('click', async () => {
-      if (!confirm(`Are you sure you want to delete "${name}"?`)) return
-
-      await deleteGame(name)
-      gameEl.remove()
-    })
 
     return gameEl
   }

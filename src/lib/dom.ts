@@ -1,5 +1,8 @@
 const ELEMENT_NODE = 1
 
+export const isNode = ( node: any ): node is Node =>
+  node && typeof node.nodeType === 'number'
+
 export const isElement = (node: Node): node is HTMLElement =>
   node.nodeType === ELEMENT_NODE
 

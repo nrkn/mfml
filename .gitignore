@@ -1,3 +1,6 @@
+data/www/games/**
+data/www/app.js
+
 # Logs
 logs
 *.log

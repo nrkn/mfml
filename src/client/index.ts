@@ -4,6 +4,7 @@ import { redirect, setOnRedirect } from './redirect'
 
 // probably we will make a standard template for the system and have a container in it be targetEl, but body is fine for prototyping
 const targetEl = document.body 
+const entry = '#games'
 
 const notImplementedYetView = (name: string) =>
   async () => h1('Not implemented yet: ' + name)
@@ -15,32 +16,35 @@ const views: Record<string, (...args: string[]) => Promise<Node>> = {
   createGame: notImplementedYetView('createGame'),
 }
 
+const errView = (err: Error) => h1('Error: ' + err.message)
+
 setOnRedirect(async path => {
-  const parts = path.split('/')
+  let viewNode: Node
 
-  const [head, ...args] = parts
+  try {
+    const parts = path.split('/')
 
-  if (!head.startsWith('#')) {
-    throw Error('Invalid path')
+    const [head, ...args] = parts
+  
+    if (!head.startsWith('#')) {
+      throw Error('Invalid path')
+    }
+  
+    const viewName = head.slice(1)
+  
+    viewNode = await views[viewName](...args)  
+    
+    targetEl.id = 'view_' + viewName
+  } catch( err: any ){
+    viewNode = errView(err)
   }
 
-  const viewName = head.slice(1)
-
-  const viewNode = await views[viewName](...args)
-
   targetEl.innerHTML = ''
-  targetEl.append(viewNode) 
-  targetEl.id = 'view_' + viewName
+  targetEl.append(viewNode)   
 })
-
-const hasAnchor = window.location.hash.length > 0
-
-if( hasAnchor ) {
-  redirect(window.location.hash)
-} else {
-  redirect('#games')
-}
 
 window.addEventListener('hashchange', () => {
   redirect(window.location.hash)
 })
+
+redirect( window.location.hash || entry )
