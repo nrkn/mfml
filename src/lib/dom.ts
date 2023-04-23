@@ -1,10 +1,15 @@
 const ELEMENT_NODE = 1
+const DOCUMENT_FRAGMENT_NODE = 11
 
 export const isNode = ( node: any ): node is Node =>
   node && typeof node.nodeType === 'number'
 
-export const isElement = (node: Node): node is HTMLElement =>
+// slight lie - could also be any Element - but more useful to us for now
+export const isHtmlElement = (node: Node): node is HTMLElement =>
   node.nodeType === ELEMENT_NODE
+
+export const isFragment = (node: Node): node is DocumentFragment =>
+  node.nodeType === DOCUMENT_FRAGMENT_NODE
 
 export const removeAttrs = (attrs: string[]) => (node: HTMLElement) =>
   attrs.forEach(k => node.removeAttribute(k))

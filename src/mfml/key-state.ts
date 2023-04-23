@@ -1,5 +1,5 @@
 import {
-  findChild, getAttrs, isElement, removeAttrs, unwrap
+  findChild, getAttrs, isHtmlElement, removeAttrs, unwrap
 } from '../lib/dom'
 
 import { spaceSeparated } from '../lib/util'
@@ -29,10 +29,10 @@ const isQuery = (ifKeys: string[], orKeys: string[], notKeys: string[]) =>
 const isFirstAttr = (node: HTMLElement) => node.hasAttribute('q-first')
 
 const isElseAttr = (node: Node): node is HTMLElement =>
-  isElement(node) && node.hasAttribute('q-else')
+  isHtmlElement(node) && node.hasAttribute('q-else')
 
 const unwrapMf = (node: Node) => {
-  if (!isElement(node)) return node
+  if (!isHtmlElement(node)) return node
 
   if (node.localName !== 'm-f') {
     return node
@@ -108,7 +108,7 @@ const handleL = (keys: Set<string>) =>
 
 export const handleKeyState = (keys: Set<string>) =>
   (node: Node) => {
-    if (!isElement(node)) {
+    if (!isHtmlElement(node)) {
       return node
     }
 
@@ -133,7 +133,7 @@ const findElseChild = findChild(isElseAttr)
 
 const isValidQuery = (keys: Set<string>) =>
   (n: Node): n is HTMLElement => {
-    if (!isElement(n)) return false
+    if (!isHtmlElement(n)) return false
 
     const [ifKeys, orKeys, notKeys] = getQueryKeys(n)
     const isQ = isQuery(ifKeys, orKeys, notKeys)

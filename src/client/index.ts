@@ -1,6 +1,9 @@
 import { h1 } from '@nrkn/h'
 import { gamesView } from './views/games'
 import { redirect, setOnRedirect } from './redirect'
+import { createGameView } from './views/create-game'
+import { playGameView } from './views/play'
+import { editGameView } from './views/edit-game'
 
 // probably we will make a standard template for the system and have a container in it be targetEl, but body is fine for prototyping
 const targetEl = document.body 
@@ -11,9 +14,9 @@ const notImplementedYetView = (name: string) =>
 
 const views: Record<string, (...args: string[]) => Promise<Node>> = {
   games: gamesView,
-  play: notImplementedYetView('play'),
-  editGame: notImplementedYetView('editGame'),
-  createGame: notImplementedYetView('createGame'),
+  play: playGameView,
+  editGame: editGameView,
+  createGame: createGameView,
 }
 
 const errView = (err: Error) => h1('Error: ' + err.message)

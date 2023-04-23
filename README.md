@@ -229,6 +229,12 @@ placeholder example:
 </m-f>
 ```
 
+## stage 4
+
+Add numbers and strings alongside boolean keys, along with queries etc
+
+Maybe we should swap stages 3 and 4?
+
 <!-- todo: add further stages -->
 
 # server

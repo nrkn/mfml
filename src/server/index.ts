@@ -1,39 +1,40 @@
 import * as express from 'express'
 import { readdir, stat, rm, mkdir, writeFile } from 'fs/promises'
 import { join } from 'path/posix'
+import { getGamePath } from './paths'
+import { gamesRoot, wwwRoot } from './const'
+import { deleteGame, getGameNames, postGame, putGame } from './store/game'
 
 const port = process.env.port || process.env.PORT || 3409
 const app = express()
 
-app.use(express.static('data/www'))
+app.use(express.static(wwwRoot))
+
+app.use(( req, _res, next ) => {
+  const { method, url } = req
+
+  console.log( 'req', { method, url } )
+
+  next()
+})
 
 app.get('/api/games', async (_req, res) => {
-  const names = await readdir('data/www/games')
-
-  const dirs: string[] = []
-
-  for (const name of names) {
-    const path = join('data/www/games', name)
-    const stats = await stat(path)
-
-    if (stats.isDirectory()) dirs.push(name)
-  }
-
-  res.json(dirs)
+  res.json( await getGameNames() )
 })
 
 app.delete('/api/games/:name', async (req, res) => {
   const { name } = req.params
 
-  const path = join('data/www/games', name)
-  const stats = await stat(path)
+  try {
+    await deleteGame(name)
 
-  if (stats.isDirectory()) {
-    await rm(path, { recursive: true })
+    console.log( 'deleted', name )
 
     res.status(204).send()
-  } else {
-    res.status(404).send()
+  } catch( err: any ){
+    console.error( err )
+
+    res.status(404).send(err.message)
   }
 })
 
@@ -43,20 +44,17 @@ app.post(
   async (req, res) => {
     const { name } = req.params
     const { body } = req
-
-    const path = join('data/www/games', name)
-    const stats = await stat(path)
-
-    if (stats.isDirectory()) {
-      res.status(409).send()
-    } else {
-      await mkdir(path)
-
-      const indexHtmlPath = join(path, 'index.html')
-
-      await writeFile(indexHtmlPath, body, 'utf-8')
+    
+    try {
+      await postGame(name, body)
+      
+      console.log( 'posted', name )
 
       res.status(201).send()
+    } catch( err: any ){
+      console.error( err )
+
+      res.status(409).send(err.message)
     }
   }
 )
@@ -68,11 +66,17 @@ app.put(
     const { name } = req.params
     const { body } = req
 
-    const path = join('data/www/games', name, 'index.html')
+    try {
+      await putGame(name, body)
 
-    await writeFile(path, body, 'utf-8')
+      console.log( 'put', name )
 
-    res.status(204).send()
+      res.status(204).send()
+    } catch( err: any ){
+      console.error( err )
+      
+      res.status(404).send(err.message)
+    }
   }
 )
 

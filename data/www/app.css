@@ -11,7 +11,24 @@ body {
   box-sizing: inherit;
 }
 
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
 #view_games ul {
   list-style: none;
   padding: 0;
+}
+
+#gameHost {
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  /* need to hide iframe stuff too border etc */
+  border: 0;
+  outline: 0;
+  padding: 0;
+  margin: 0;
 }

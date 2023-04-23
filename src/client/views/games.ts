@@ -1,13 +1,15 @@
-import { button, div, h1, p } from '@nrkn/h'
+import { div, h1, p } from '@nrkn/h'
 import { deleteGame, getGameNames } from '../store/game'
-import { ulFrom } from './util/ul-from'
-import { buttonTo, buttonConfirmFn } from './util/buttons'
+import { ulFrom } from './util/ul'
+import { buttonTo, buttonConfirmFn } from './util/button'
 
-export const gamesView = async ( id = 'games') => {
+const id = 'games'
+
+export const gamesView = async () => {
   const gameNames = await getGameNames()
 
   const gamesHeader = h1('Games')
-  const createButton = buttonTo( '#createGame', 'Create a game')
+  const createButton = buttonTo('#createGame', 'Create a game')
 
   const gameToNode = (name: string) => {
     const playButton = buttonTo('#play/' + name, 'Play')
